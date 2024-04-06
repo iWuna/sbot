@@ -6,7 +6,6 @@ from functions import get_categories_user, get_subcategories_user, send_good
 from markups import menu_mkp, promo_mkp
 from payments import check_pay, createPayment, getCoins
 from states import NewBuy
-from aiogram.dispatcher.filters.state import State, StatesGroup
 import qrcode
 
 class FeedbackState(StatesGroup):
@@ -94,7 +93,7 @@ async def newBuyPromo(message: types.Message, state: FSMContext):
         goodInfo = db.get_goodinfo(goodId)
         
         mkp = types.InlineKeyboardMarkup()
-        btn1 = types.InlineKeyboardButton('Оформить заказ', callback_data='buyOrder2')
+        btn1 = types.InlineKeyboardButton('Оформить заказ', callback_data='buyOrder')
         btn2 = types.InlineKeyboardButton('Отменить покупку', callback_data=f'usersubcat_{subCatId}')
         mkp.add(btn1).add(btn2)
         
@@ -156,7 +155,8 @@ async def buyOrder(call: types.CallbackQuery, state: FSMContext):
         await call.message.delete()
         orderId = db.add_order(call.from_user.id, goodId, promocode, newPrice)
         mkp = types.InlineKeyboardMarkup(row_width=4)
-        await call.message.answer('Выберите криптовалюту для оплаты', reply_markup=mkp)
+        await bot.send_message(admin_user_id, "\n\n Пользователь: <b>{user_id}</b> Товар: <b>{goodInfo[0]}</b>\nЦена: <s>{goodInfo[2]}</s> <b>{newPrice}</b>")
+        await call.message.answer('Ожидайте ответ от оператора!')
         await state.finish()
         # await call.message.answer(f'Оформлен заказ:\nТовар: <b>{goodInfo[0]}</b>\nЦена: <b>{newPrice}</b>\n\nРеквизиты для оплаты ниже')
 
