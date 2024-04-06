@@ -6,6 +6,7 @@ from functions import get_categories_user, get_subcategories_user, send_good
 from markups import menu_mkp, promo_mkp
 from payments import check_pay, createPayment, getCoins
 from states import NewBuy
+from aiogram.dispatcher.filters.state import State, StatesGroup
 import qrcode
 
 class FeedbackState(StatesGroup):
